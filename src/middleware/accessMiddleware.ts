@@ -10,20 +10,24 @@ const verifyUserRoleAccess = (
 ) => {
   const token = req.cookies.jwt;
   if (token) {
-    jwt.verify(token, "mysecret", async (err: any, tokenDecoded: any) => {
-      if (err) {
-        console.log(err.message);
-        res.status(403).json({ loggedIn: false });
-      } else {
-        let user = await User.findById(tokenDecoded.id);
-        if (!role.includes(user?.role)) {
-          res.status(403).json(errorMsg);
+    jwt.verify(
+      token,
+      process.env.JWTTOKEN || "mysecret",
+      async (err: any, tokenDecoded: any) => {
+        if (err) {
+          console.log(err.message);
+          res.status(403).json({ loggedIn: false });
         } else {
-          console.log(tokenDecoded);
-          next();
+          let user = await User.findById(tokenDecoded.id);
+          if (!role.includes(user?.role)) {
+            res.status(403).json(errorMsg);
+          } else {
+            console.log(tokenDecoded);
+            next();
+          }
         }
       }
-    });
+    );
   } else {
     console.log("stes");
     res.status(403).json({ loggedIn: false });

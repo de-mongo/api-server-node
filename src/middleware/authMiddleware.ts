@@ -5,15 +5,19 @@ module.exports.requireAuth = (req: any, res: any, next: any) => {
   const token = req.cookies.jwt;
   console.log(req);
   if (token) {
-    jwt.verify(token, "mysecret", (err: any, tokenDecoded: any) => {
-      if (err) {
-        console.log(err.message);
-        res.status(403).json({ loggedIn: false });
-      } else {
-        console.log(tokenDecoded);
-        next();
+    jwt.verify(
+      token,
+      process.env.JWTTOKEN || "mysecret",
+      (err: any, tokenDecoded: any) => {
+        if (err) {
+          console.log(err.message);
+          res.status(403).json({ loggedIn: false });
+        } else {
+          console.log(tokenDecoded);
+          next();
+        }
       }
-    });
+    );
   } else {
     console.log("asdfasd");
     res.status(403).json({ loggedIn: false });
