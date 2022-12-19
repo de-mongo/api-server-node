@@ -1,5 +1,5 @@
-let _jwt = require("jsonwebtoken");
-let _User = require("../models/User");
+import jwt from "jsonwebtoken";
+import User from "../models/User";
 
 const verifyUserRoleAccess = (
   req: any,
@@ -10,13 +10,13 @@ const verifyUserRoleAccess = (
 ) => {
   const token = req.cookies.jwt;
   if (token) {
-    _jwt.verify(token, "mysecret", async (err: any, tokenDecoded: any) => {
+    jwt.verify(token, "mysecret", async (err: any, tokenDecoded: any) => {
       if (err) {
         console.log(err.message);
         res.status(403).json({ loggedIn: false });
       } else {
-        let user = await _User.findById(tokenDecoded.id);
-        if (!role.includes(user.role)) {
+        let user = await User.findById(tokenDecoded.id);
+        if (!role.includes(user?.role)) {
           res.status(403).json(errorMsg);
         } else {
           console.log(tokenDecoded);
