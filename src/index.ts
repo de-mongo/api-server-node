@@ -10,7 +10,7 @@ import Auth from './routes/auth.route';
 const app: Express = express();
 const port = process.env.PORT || 4000;
 
-const dbUri = process.env.DB_URL || 'mongodb://localhost:27017/scm';
+const dbUri = process.env.DB_URL || 'mongodb://127.0.0.1:27017/scm';
 
 const methods = [
   'GET', 
