@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User";
 
-module.exports.requireAuth = (req: any, res: any, next: any) => {
+export const requireAuth = (req: any, res: any, next: any) => {
   const token = req.cookies.jwt;
   console.log(req);
   if (token) {
@@ -24,7 +24,7 @@ module.exports.requireAuth = (req: any, res: any, next: any) => {
   }
 };
 
-module.exports.checkUser = (req: any, res: any, next: any) => {
+export const checkUser = (req: any, res: any, next: any) => {
   const token = req.cookies.jwt;
 
   if (token) {

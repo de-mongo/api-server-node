@@ -62,6 +62,6 @@ userSchema.static('login', async function login(email, password) {
 })
 
 userSchema.plugin(mongoosePaginate);
-const User = model<IUser, UserModel>('user', userSchema);
+const User = model<IUser, UserModel>('User', userSchema);
 
 export default User;

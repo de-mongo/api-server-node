@@ -33,5 +33,5 @@ app.get("/ping", (_: Request, res: Response) => {
 
 app.listen(port, async () => {
   await mongoose.connect(dbUri);
-  console.log(`🚀 server running on: 🌐http://localhost:${port}`);
-});
+  console.log(`🚀 server running on: 🌐http://localhost:${port}`)
+})
