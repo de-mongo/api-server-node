@@ -29,30 +29,29 @@ const verifyUserRoleAccess = (
       }
     );
   } else {
-    console.log("stes");
     res.status(403).json({ loggedIn: false });
   }
 };
 
-module.exports.isAdmin = (req: any, res: any, next: any) => {
+export const isAdmin = (req: any, res: any, next: any) => {
   verifyUserRoleAccess(req, res, next, ["admin"], {
     error: "Access Denied. User not Admin",
   });
 };
 
-module.exports.isLibrarian = (req: any, res: any, next: any) => {
+export const isLibrarian = (req: any, res: any, next: any) => {
   verifyUserRoleAccess(req, res, next, ["admin", "librarian"], {
     error: "Access Denied. User not Admin or Librarian",
   });
 };
 
-module.exports.isFaculty = (req: any, res: any, next: any) => {
+export const isFaculty = (req: any, res: any, next: any) => {
   verifyUserRoleAccess(req, res, next, ["admin", "faculty"], {
     error: "Access Denied. User not Admin or Librarian",
   });
 };
 
-module.exports.isStudentOnly = (req: any, res: any, next: any) => {
+export const isStudentOnly = (req: any, res: any, next: any) => {
   verifyUserRoleAccess(req, res, next, ["student"], {
     error: "Access Denied. User not Student",
   });
