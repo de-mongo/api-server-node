@@ -23,13 +23,13 @@ function handleErrors(err: any) {
 const maxAge = 3 * 24 * 60 * 60; // 3days
 
 function createToken({ id }: { id: any; }): string {
-  return jwt.sign({ id }, 'itlab secret', {
+  return jwt.sign({ id }, (process.env.JWT_SECRET || 'demongosecret'), {
     expiresIn: maxAge
   });
 }
 
 export const signup = async (req: Request, res: Response) => {
-  const {name, email, password} = req.body;
+  const {name, email, password} = req.body; // TODO: Extend the inputs being taken in the body
 
   try {
     const user = await User.create({name, email, password});
