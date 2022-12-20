@@ -1,10 +1,16 @@
 import {Schema, model, Types, PaginateModel} from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 
+interface TakenBy {
+    course: string,
+    sem: number
+}
+
 interface ICourse {
     deptid: Types.ObjectId,
     instrid: Types.ObjectId,
     name: string,
+    taken_by: Array<TakenBy>
 }
 
 const courseSchema = new Schema<ICourse>({
@@ -22,9 +28,13 @@ const courseSchema = new Schema<ICourse>({
         type: String,
         required: true,
     },
+    taken_by: {
+        type: [Object]
+    }
 })
 
 courseSchema.plugin(paginate);
 const Course = model<ICourse, PaginateModel<ICourse>>('course', courseSchema);
 
-export default Course;
+export { Course };
+export type {ICourse};

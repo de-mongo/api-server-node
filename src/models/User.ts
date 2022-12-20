@@ -1,4 +1,4 @@
-import { Schema, PaginateModel, Model, model, Types, ObjectId } from "mongoose";
+import { Schema, PaginateModel, model, Types } from "mongoose";
 import isEmail from "validator/lib/isEmail";
 import bcrypt from "bcrypt";
 import paginate from "mongoose-paginate-v2";
@@ -19,7 +19,7 @@ interface IUser {
   profile_pic: string;
 }
 
-interface UserModel extends Model<IUser> {
+interface UserModel extends PaginateModel<IUser> {
   login(email: string, password: string): any;
 }
 
@@ -67,10 +67,10 @@ const userSchema = new Schema<IUser, UserModel>({
     type: String,
     required: true,
   },
-  courses: {
-    type: [Schema.Types.ObjectId],
-    // required : true
-  },
+  courses: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  }],
   cgpa: {
     type: Number,
     // required : true
@@ -102,6 +102,7 @@ userSchema.static("login", async function login(email, password) {
 });
 
 userSchema.plugin(paginate);
+
 const User = model<IUser, UserModel>("User", userSchema);
 
 export default User;
