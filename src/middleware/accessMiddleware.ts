@@ -39,12 +39,6 @@ export const isAdmin = (req: any, res: any, next: any) => {
   });
 };
 
-export const isLibrarian = (req: any, res: any, next: any) => {
-  verifyUserRoleAccess(req, res, next, ["admin", "librarian"], {
-    error: "Access Denied. User not Admin or Librarian",
-  });
-};
-
 export const isFaculty = (req: any, res: any, next: any) => {
   verifyUserRoleAccess(req, res, next, ["admin", "faculty"], {
     error: "Access Denied. User not Admin or Librarian",
@@ -53,6 +47,12 @@ export const isFaculty = (req: any, res: any, next: any) => {
 
 export const isStudentOnly = (req: any, res: any, next: any) => {
   verifyUserRoleAccess(req, res, next, ["student"], {
+    error: "Access Denied. User not Student",
+  });
+};
+
+export const isStudentOrFaculty = (req: any, res: any, next: any) => {
+  verifyUserRoleAccess(req, res, next, ["student", "faculty"], {
     error: "Access Denied. User not Student",
   });
 };

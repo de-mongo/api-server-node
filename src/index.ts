@@ -6,16 +6,23 @@ import cors from "cors";
 
 // import Post from './routes/post.route';
 import Auth from "./routes/auth.route";
+import UserList from "./routes/userList.route";
+
+import {
+  isFaculty,
+  isStudentOnly,
+  isStudentOrFaculty,
+} from "./middleware/accessMiddleware";
 
 const app: Express = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 
-const dbUri = process.env.DB_URL || 'mongodb://127.0.0.1:27017/scm';
+const dbUri = process.env.DB_URL || "mongodb://127.0.0.1:27017/scm";
 
 const methods = ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"];
 
 const { requireAuth, checkUser } = require("./middleware/authMiddleware");
-const { isAdmin, isLibrarian } = require("./middleware/accessMiddleware");
+const { isAdmin } = require("./middleware/accessMiddleware");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -24,14 +31,15 @@ app.use(
 );
 app.use(morgan("common"));
 
-// app.use("/api/v1/", Post);
 app.use("/api/v1/auth/", Auth);
 
-app.get("/ping", (_: Request, res: Response) => {
+app.get("/ping", isStudentOrFaculty, (_: Request, res: Response) => {
   res.json({ ping: "pong" });
 });
 
+app.use("/api/v1/users/", isAdmin, UserList);
+
 app.listen(port, async () => {
   await mongoose.connect(dbUri);
-  console.log(`🚀 server running on: 🌐http://localhost:${port}`)
-})
+  console.log(`🚀 server running on: 🌐http://localhost:${port}`);
+});
