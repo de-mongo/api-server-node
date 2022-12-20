@@ -6,6 +6,7 @@ import cors from "cors";
 
 // import Post from './routes/post.route';
 import Auth from "./routes/auth.route";
+import Course from "./routes/course.route";
 
 const app: Express = express();
 const port = process.env.PORT || 4000;
@@ -26,6 +27,7 @@ app.use(morgan("common"));
 
 // app.use("/api/v1/", Post);
 app.use("/api/v1/auth/", Auth);
+app.use("/api/v1/", Course);
 
 app.get("/ping", (_: Request, res: Response) => {
   res.json({ ping: "pong" });

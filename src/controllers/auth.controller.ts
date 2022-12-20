@@ -23,7 +23,7 @@ function handleErrors(err: any) {
 const maxAge = 3 * 24 * 60 * 60; // 3days
 
 function createToken({ id }: { id: any; }): string {
-  return jwt.sign({ id }, (process.env.JWT_SECRET || 'demongosecret'), {
+  return jwt.sign({ id }, (process.env.JWTTOKEN || 'mysecret'), {
     expiresIn: maxAge
   });
 }
