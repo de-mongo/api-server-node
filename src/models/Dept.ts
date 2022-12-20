@@ -1,19 +1,19 @@
-import {Schema, model, Types, PaginateModel} from 'mongoose';
-import paginate from 'mongoose-paginate-v2';
+import { Schema, model, Types, PaginateModel } from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
 interface IDept {
-    name: string,
+  name: string;
 }
 
 const deptSchema = new Schema<IDept>({
-    name: {
-        type: String,
-        required: true,
-    }
-})
+  name: {
+    type: String,
+    required: true,
+  },
+});
 
 deptSchema.plugin(paginate);
-const Dept = model<IDept, PaginateModel<IDept>>('dept', deptSchema);
+const Dept = model<IDept, PaginateModel<IDept>>("dept", deptSchema);
 
 export { Dept };
-export type {IDept};
+export type { IDept };
