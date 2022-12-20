@@ -1,16 +1,17 @@
-import {Schema, Model, model} from 'mongoose';
+import {Schema, PaginateModel, model, Types} from 'mongoose';
 import isEmail from 'validator/lib/isEmail';
 import bcrypt from 'bcrypt';
-import mongoosePaginate from 'mongoose-paginate-v2';
+import paginate from 'mongoose-paginate-v2';
 
 interface IUser {
     name?: string,
     email: string,
     password: string,
     role?: string,
+    courses: Array<Types.ObjectId>,
 }
 
-interface UserModel extends Model<IUser> {
+interface UserModel extends PaginateModel<IUser> {
     login(email:string, password:string): any;
 }
 
@@ -39,6 +40,10 @@ const userSchema = new Schema<IUser, UserModel>({
             'student',
         ]
     },
+    courses: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    }],
 })
 
 // encrypt the password before saving it to the database
@@ -61,7 +66,7 @@ userSchema.static('login', async function login(email, password) {
     throw Error('incorrect email');
 })
 
-userSchema.plugin(mongoosePaginate);
+userSchema.plugin(paginate);
 const User = model<IUser, UserModel>('User', userSchema);
 
 export default User;
