@@ -8,6 +8,7 @@ import cors from "cors";
 import Auth from "./routes/auth.route";
 
 import UserList from "./routes/userList.route";
+import Dept from "./routes/dept.route";
 
 import {
   isFaculty,
@@ -41,7 +42,9 @@ app.get("/ping", isStudentOrFaculty, (_: Request, res: Response) => {
   res.json({ ping: "pong" });
 });
 
+
 app.use("/api/v1/users/", requireAuth, isAdmin, UserList);
+app.use("/api/v1/dept/", isStudentOrFaculty, Dept);
 
 app.listen(port, async () => {
   await mongoose.connect(dbUri);

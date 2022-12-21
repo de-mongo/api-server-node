@@ -27,11 +27,31 @@ function createToken({ id }: { id: any }): string {
 }
 
 export const signup = async (req: Request, res: Response) => {
-  let { reg_no, name, email, password, role, courses, degree, profile_pic, sem } = req.body; // TODO: Extend the inputs being taken in the body
+  const {
+      email,
+      password,
+      role,
+      reg_no,
+      first_name,
+      last_name,
+      street_address,
+      date_of_birth,
+      degree,
+  } = req.body; // TODO: Extend the inputs being taken in the body
 
   sem = sem ?? 1;
   try {
-    const user = await User.create({ reg_no, name, email, password, role, courses, degree, profile_pic, sem});
+    const user = await User.create({
+      email,
+      password,
+      role,
+      reg_no,
+      first_name,
+      last_name,
+      street_address,
+      date_of_birth,
+      degree,
+    });
     const token = createToken({ id: user._id });
 
     // maxAge is in milliseconds
