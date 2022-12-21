@@ -2,13 +2,14 @@ import { Schema, model, Types, PaginateModel } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 
 interface IDept {
-  name: string;
+  dept_name: string;
 }
 
 const deptSchema = new Schema<IDept>({
-  name: {
+  dept_name: {
     type: String,
     required: true,
+    unique: true,
   },
 });
 
