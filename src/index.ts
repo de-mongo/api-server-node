@@ -6,6 +6,7 @@ import cors from "cors";
 
 // import Post from './routes/post.route';
 import Auth from "./routes/auth.route";
+
 import UserList from "./routes/userList.route";
 import Dept from "./routes/dept.route";
 
@@ -14,6 +15,8 @@ import {
   isStudentOnly,
   isStudentOrFaculty,
 } from "./middleware/accessMiddleware";
+
+import Course from "./routes/course.route";
 
 const app: Express = express();
 const port = process.env.PORT || 5000;
@@ -33,6 +36,7 @@ app.use(
 app.use(morgan("common"));
 
 app.use("/api/v1/auth/", Auth);
+app.use("/api/v1/", Course);
 
 app.get("/ping", isStudentOrFaculty, (_: Request, res: Response) => {
   res.json({ ping: "pong" });
