@@ -28,24 +28,6 @@ function createToken({ id }: { id: any }): string {
 
 export const signup = async (req: Request, res: Response) => {
   const {
-    name,
-    email,
-    password,
-    role,
-    reg_no,
-    first_name,
-    last_name,
-    street_address,
-    date_of_birth,
-    degree,
-    courses,
-    cgpa,
-    profile_pic,
-  } = req.body; // TODO: Extend the inputs being taken in the body
-
-  try {
-    const user = await User.create({
-      name,
       email,
       password,
       role,
@@ -55,9 +37,20 @@ export const signup = async (req: Request, res: Response) => {
       street_address,
       date_of_birth,
       degree,
-      courses,
-      cgpa,
-      profile_pic,
+  } = req.body; // TODO: Extend the inputs being taken in the body
+
+  sem = sem ?? 1;
+  try {
+    const user = await User.create({
+      email,
+      password,
+      role,
+      reg_no,
+      first_name,
+      last_name,
+      street_address,
+      date_of_birth,
+      degree,
     });
     const token = createToken({ id: user._id });
 
@@ -91,9 +84,9 @@ export const login = async (req: Request, res: Response) => {
     });
     res.cookie("user", `${user.name}-${user.role}`, {
       maxAge: maxAge * 1000,
-      secure: true,
+      // secure: true,
     });
-    res.status(200).json({ user: user._id });
+    res.status(200).json({ user: user._id, jwt: token });
   } catch (err) {
     const errors = handleErrors(err);
     // bad request status code

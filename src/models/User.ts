@@ -9,14 +9,15 @@ interface IUser {
   password: string;
   role?: string;
   reg_no: string;
-  first_name: string;
-  last_name: string;
-  street_address: string;
-  date_of_birth: Date;
+  first_name?: string;
+  last_name?: string;
+  street_address?: string;
+  date_of_birth?: Date;
   degree: string;
   courses: Array<Types.ObjectId>;
-  cgpa: Number;
-  profile_pic: string;
+  cgpa?: Number;
+  profile_pic?: string;
+  sem?: Number;
 }
 
 interface UserModel extends PaginateModel<IUser> {
@@ -46,18 +47,19 @@ const userSchema = new Schema<IUser, UserModel>({
   reg_no: {
     type: String,
     required: true,
+    unique: true
   },
   first_name: {
     type: String,
-    required: true,
+    // required: true,
   },
   last_name: {
     type: String,
-    required: true,
+    // required: true,
   },
   street_address: {
     type: String,
-    required: true,
+    // required: true,
   },
   date_of_birth: {
     type: Date,
@@ -69,7 +71,7 @@ const userSchema = new Schema<IUser, UserModel>({
   },
   courses: [{
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Course',
   }],
   cgpa: {
     type: Number,
@@ -79,6 +81,9 @@ const userSchema = new Schema<IUser, UserModel>({
     type: String,
     //required: true,
   },
+  sem: {
+    type: Number
+  }
 });
 
 // encrypt the password before saving it to the database
