@@ -13,6 +13,19 @@ export const listall = async (req: Request, res: Response) => {
   }
 };
 
+export const listone = async (req: Request, res: Response) => {
+  const { _id } = req.body;
+
+  try {
+    const userDetail = await User.findById({ id: _id });
+
+    res.status(201).json({ user: userDetail });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err });
+  }
+};
+
 export const createUser = async (req: Request, res: Response) => {
   const {
     name,
@@ -98,11 +111,7 @@ export const deleteUser = async (req: Request, res: Response) => {
   const { _id } = req.body;
 
   try {
-    await User.deleteOne({ _id: _id }, function (err: any, _: any) {
-      if (err) {
-        return console.log(err);
-      }
-    });
+    const val = await User.findByIdAndDelete({ _id: _id });
 
     res.status(201).json({ value: "deleted" });
   } catch (err) {
