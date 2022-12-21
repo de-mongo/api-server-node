@@ -16,7 +16,7 @@ interface ICourse {
 const courseSchema = new Schema<ICourse>({
     deptid: {
         type: Schema.Types.ObjectId,
-        ref: 'Dept',
+        ref: 'dept',
         required: true,
     },
     instrid: {
@@ -27,6 +27,7 @@ const courseSchema = new Schema<ICourse>({
     name: {
         type: String,
         required: true,
+        unique: true,
     },
     taken_by: {
         type: [Object]
@@ -34,7 +35,7 @@ const courseSchema = new Schema<ICourse>({
 })
 
 courseSchema.plugin(paginate);
-const Course = model<ICourse, PaginateModel<ICourse>>('course', courseSchema);
+const Course = model<ICourse, PaginateModel<ICourse>>('Course', courseSchema);
 
 export { Course };
 export type {ICourse};

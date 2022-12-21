@@ -4,10 +4,18 @@ import User from '../models/User';
 import { Types } from 'mongoose';
 
 export const getAllCourses = async (req: Request, res: Response) => {
+    let courses
     switch (res.locals.user.role) {
         case "student":
+            console.log(res.locals.user.degree, res.locals.user.sem)
+            courses = await Course.paginate(
+                { taken_by: { $elemMatch: { course: res.locals.user.degree, sem: res.locals.user.sem }}}, 
+                { page: parseInt(String(req.query.page)) || 1, populate: ['instrid']} 
+            )
+            res.json(courses)
+            break;
         case "faculty":
-            const courses = await Course.paginate({}, {page: parseInt(String(req.query.page)) })
+            courses = await Course.paginate({}, {page: parseInt(String(req.query.page)) })
             res.json(courses)
             break;
         default:
@@ -20,8 +28,14 @@ export const getAllCourses = async (req: Request, res: Response) => {
 export const getMyCourse = async (req: Request, res: Response) => {
     switch (res.locals.user.role) {
         case "student":
-            const courses = await User.findById(res.locals.user._id).populate('courses');
-            console.log(courses);
+            if ((req.query['nopopulate']) == "true") {
+                const user = await User.findById(res.locals.user._id);
+                res.json(user?.courses);
+            } else {
+                const user = await User.findById(res.locals.user._id)
+                            .populate({path: 'courses', populate: {path: 'instrid'}})
+                res.json(user?.courses);
+            }
             break;
         case "faculty":
             console.log("test")
@@ -88,8 +102,10 @@ export const deleteCourse = async (req: Request, res: Response) => {
 export const enrollCourse = async(req: Request, res:Response) => {
     const {courseId} = req.body;
 
+    console.log("test")
     try {
-        await User.findByIdAndUpdate(res.locals.user._id, { $push: {courses: courseId}})
+        const update = await User.findByIdAndUpdate(res.locals.user._id, { $push: {courses: courseId}})
+        res.send(update)
     } catch (err) {
         res.status(400).json({error: "Unable to delete course"})
     }

@@ -30,7 +30,7 @@ const { isAdmin } = require("./middleware/accessMiddleware");
 app.use(express.json());
 app.use(cookieParser());
 app.use(
-  cors({ origin: "*", preflightContinue: true, credentials: true, methods })
+  cors({ origin: "http://localhost:3000", preflightContinue: true, credentials: true, methods })
 );
 app.use(morgan("common"));
 
@@ -41,7 +41,7 @@ app.get("/ping", isStudentOrFaculty, (_: Request, res: Response) => {
   res.json({ ping: "pong" });
 });
 
-app.use("/api/v1/users/", isAdmin, UserList);
+app.use("/api/v1/users/", requireAuth, isAdmin, UserList);
 
 app.listen(port, async () => {
   await mongoose.connect(dbUri);

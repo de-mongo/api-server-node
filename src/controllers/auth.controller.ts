@@ -27,10 +27,11 @@ function createToken({ id }: { id: any }): string {
 }
 
 export const signup = async (req: Request, res: Response) => {
-  const { name, email, password, role } = req.body; // TODO: Extend the inputs being taken in the body
+  let { reg_no, name, email, password, role, courses, degree, profile_pic, sem } = req.body; // TODO: Extend the inputs being taken in the body
 
+  sem = sem ?? 1;
   try {
-    const user = await User.create({ name, email, password, role });
+    const user = await User.create({ reg_no, name, email, password, role, courses, degree, profile_pic, sem});
     const token = createToken({ id: user._id });
 
     // maxAge is in milliseconds
@@ -63,9 +64,9 @@ export const login = async (req: Request, res: Response) => {
     });
     res.cookie("user", `${user.name}-${user.role}`, {
       maxAge: maxAge * 1000,
-      secure: true,
+      // secure: true,
     });
-    res.status(200).json({ user: user._id });
+    res.status(200).json({ user: user._id, jwt: token });
   } catch (err) {
     const errors = handleErrors(err);
     // bad request status code
