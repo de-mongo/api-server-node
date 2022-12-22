@@ -6,9 +6,9 @@ import cors from "cors";
 
 // import Post from './routes/post.route';
 import Auth from "./routes/auth.route";
-
 import UserList from "./routes/userList.route";
 import Dept from "./routes/dept.route";
+import AdminUser from "./routes/adminUser.route";
 
 import {
   isFaculty,
@@ -17,6 +17,7 @@ import {
 } from "./middleware/accessMiddleware";
 
 import Course from "./routes/course.route";
+import { checkAdmin } from "./middleware/authMiddleware";
 
 const app: Express = express();
 const port = process.env.PORT || 5000;
@@ -35,16 +36,16 @@ app.use(
 );
 app.use(morgan("common"));
 
+app.use("/api/v1/*", checkUser, checkAdmin);
 app.use("/api/v1/auth/", Auth);
 app.use("/api/v1/", Course);
+app.use("/api/v1/users/", requireAuth, isAdmin, UserList);
+app.use("/api/v1/dept/", isStudentOrFaculty, Dept);
+app.use("/api/v1/admin/", requireAuth, checkUser, isAdmin, AdminUser);
 
 app.get("/ping", isStudentOrFaculty, (_: Request, res: Response) => {
   res.json({ ping: "pong" });
 });
-
-
-app.use("/api/v1/users/", requireAuth, isAdmin, UserList);
-app.use("/api/v1/dept/", isStudentOrFaculty, Dept);
 
 app.listen(port, async () => {
   await mongoose.connect(dbUri);

@@ -3,10 +3,16 @@ import { Request, Response } from "express";
 import User from "../models/User";
 
 export const listall = async (req: Request, res: Response) => {
-  try {
-    const userlist = await User.find();
+  let query = {}
+  req.query.role && (query = {role: req.query.role});
 
-    res.status(201).json({ user: userlist });
+  try {
+    const userlist = await User.paginate(
+      query, 
+      { page: parseInt(String(req.query.page)) || 1, populate: {path: 'courses', populate: ['instrid', 'deptid']}}
+    );
+
+    res.status(200).json(userlist);
   } catch (err) {
     console.log(err);
     res.status(400).json({ err });
@@ -17,9 +23,9 @@ export const listone = async (req: Request, res: Response) => {
   const { _id } = req.body;
 
   try {
-    const userDetail = await User.findById({ id: _id });
+    const userDetail = await User.findById({ id: _id }).populate({path: 'courses', populate: ['instrid', 'deptid']});
 
-    res.status(201).json({ user: userDetail });
+    res.status(200).json({ user: userDetail });
   } catch (err) {
     console.log(err);
     res.status(400).json({ err });
@@ -27,8 +33,7 @@ export const listone = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const {
-    name,
+  let {
     email,
     password,
     role,
@@ -38,14 +43,13 @@ export const createUser = async (req: Request, res: Response) => {
     street_address,
     date_of_birth,
     degree,
-    courses,
-    cgpa,
-    profile_pic,
+    sem,
   } = req.body;
+
+  sem = sem ?? 1;
 
   try {
     const user = await User.create({
-      name,
       email,
       password,
       role,
@@ -55,9 +59,7 @@ export const createUser = async (req: Request, res: Response) => {
       street_address,
       date_of_birth,
       degree,
-      courses,
-      cgpa,
-      profile_pic,
+      sem,
     });
 
     // new resource created status code
@@ -72,14 +74,13 @@ export const createUser = async (req: Request, res: Response) => {
 export const updateUser = async (req: Request, res: Response) => {
   const {
     _id,
-    name,
-    role,
-    password,
+    // role,
+    // password,
     first_name,
     last_name,
     street_address,
     courses,
-    cgpa,
+    // cgpa,
   } = req.body;
 
   try {
@@ -88,14 +89,13 @@ export const updateUser = async (req: Request, res: Response) => {
         _id: _id,
       },
       {
-        name: name,
-        role: role,
-        password: password,
+        // role: role,
+        // password: password,
         first_name: first_name,
         last_name: last_name,
         street_address: street_address,
         courses: courses,
-        cgpa: cgpa,
+        // cgpa: cgpa,
       }
     );
 
@@ -108,10 +108,10 @@ export const updateUser = async (req: Request, res: Response) => {
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-  const { _id } = req.body;
+  // const { _id } = req.body;
 
   try {
-    const val = await User.findByIdAndDelete({ _id: _id });
+    const val = await User.findByIdAndDelete(req.params.id);
 
     res.status(201).json({ value: "deleted" });
   } catch (err) {
