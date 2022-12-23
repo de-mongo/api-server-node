@@ -9,6 +9,7 @@ import Auth from "./routes/auth.route";
 
 import UserList from "./routes/userList.route";
 import Dept from "./routes/dept.route";
+import Face from "./routes/face.route";
 
 import {
   isFaculty,
@@ -17,6 +18,7 @@ import {
 } from "./middleware/accessMiddleware";
 
 import Course from "./routes/course.route";
+import bodyParser from "body-parser";
 
 const app: Express = express();
 const port = process.env.PORT || 5000;
@@ -28,7 +30,8 @@ const methods = ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"];
 const { requireAuth, checkUser } = require("./middleware/authMiddleware");
 const { isAdmin } = require("./middleware/accessMiddleware");
 
-app.use(express.json());
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ limit: "25mb" }));
 app.use(cookieParser());
 app.use(
   cors({ origin: "*", preflightContinue: true, credentials: true, methods })
@@ -44,6 +47,8 @@ app.get("/ping", isStudentOrFaculty, (_: Request, res: Response) => {
 
 app.use("/api/v1/users/", isAdmin, UserList);
 app.use("/api/v1/dept/", isStudentOrFaculty, Dept);
+
+app.use("/api/v1/face/", Face);
 
 app.listen(port, async () => {
   await mongoose.connect(dbUri);
