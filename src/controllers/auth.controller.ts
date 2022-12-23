@@ -84,7 +84,7 @@ export const adminLogin = async (req: Request, res: Response) => {
       maxAge: maxAge * 1000,
       secure: true,
     });
-    res.cookie("user", `${user.name}-${user.role}`, {
+    res.cookie("user", `${user.first_name}-${user.role}`, {
       maxAge: maxAge * 1000,
       // secure: true,
     });
@@ -110,7 +110,7 @@ export const login = async (req: Request, res: Response) => {
       maxAge: maxAge * 1000,
       secure: true,
     });
-    res.cookie("user", `${user.name}-${user.role}`, {
+    res.cookie("user", `${user.first_name}-${user.role}`, {
       maxAge: maxAge * 1000,
       // secure: true,
     });
