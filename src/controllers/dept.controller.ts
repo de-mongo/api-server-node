@@ -34,7 +34,7 @@ export const createDept = async (req: Request, res: Response) => {
     });
 
     // new resource created status code
-    res.status(201).json({ id: dept._id, dept: dept.dept_name });
+    res.status(201).json({ id: dept._id, dept: dept.name });
   } catch (err) {
     console.log(err);
     // bad request status code

@@ -6,12 +6,14 @@ import {
   updateUser,
   deleteUser,
 } from "../controllers/userList.controller";
+import { checkUser } from "../middleware/authMiddleware";
+import { isAdmin } from "../middleware/accessMiddleware";
 const router = Router();
 
-router.get("/listall/", listall);
-router.post("/listone/", listone);
-router.post("/createUser/", createUser);
-router.post("/updateUser/", updateUser);
-router.post("/deleteUser/", deleteUser);
+router.get("/listall/", checkUser, isAdmin, listall);
+router.post("/listone/", checkUser, listone);
+router.post("/createUser/", checkUser, isAdmin, createUser);
+router.post("/updateUser/", checkUser, isAdmin, updateUser);
+router.post("/deleteUser/", checkUser, isAdmin, deleteUser);
 
 export default router;

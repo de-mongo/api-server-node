@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 import paginate from "mongoose-paginate-v2";
 
 interface IUser {
-  name?: string;
   email: string;
   password: string;
   role?: string;
@@ -15,6 +14,7 @@ interface IUser {
   date_of_birth?: Date;
   degree: string;
   courses: Array<Types.ObjectId>;
+  // deptid: Types.ObjectId;
   cgpa?: Number;
   profile_pic?: string;
   sem?: Number;
@@ -25,10 +25,6 @@ interface UserModel extends PaginateModel<IUser> {
 }
 
 const userSchema = new Schema<IUser, UserModel>({
-  name: {
-    type: String,
-    // required: true,
-  },
   email: {
     type: String,
     required: true,
@@ -39,6 +35,7 @@ const userSchema = new Schema<IUser, UserModel>({
     type: String,
     required: true,
     minlength: 8,
+    select: false,
   },
   role: {
     type: String,
@@ -73,6 +70,10 @@ const userSchema = new Schema<IUser, UserModel>({
     type: Schema.Types.ObjectId,
     ref: 'Course',
   }],
+  // dept: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'dept',
+  // },
   cgpa: {
     type: Number,
     // required : true
@@ -95,7 +96,7 @@ userSchema.pre("save", async function (next) {
 
 // operation to be performed when user login
 userSchema.static("login", async function login(email, password) {
-  const user = await this.findOne({ email });
+  const user: any = await this.findOne({ email }).select("+password");
 
   if (user) {
     const comparePass = await bcrypt.compare(password, user.password);

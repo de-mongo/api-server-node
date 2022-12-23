@@ -1,6 +1,7 @@
 import User from "../models/User";
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
+import { AdminUser } from "../models/Admin";
 
 function handleErrors(err: any) {
   let errors = { email: "", password: "", summary: "" };
@@ -27,12 +28,13 @@ function createToken({ id }: { id: any }): string {
 }
 
 export const signup = async (req: Request, res: Response) => {
-  const {
+  let {
       email,
       password,
       role,
       reg_no,
       first_name,
+      sem,
       last_name,
       street_address,
       date_of_birth,
@@ -71,10 +73,36 @@ export const signup = async (req: Request, res: Response) => {
   }
 };
 
+export const adminLogin = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await AdminUser.login(email, password);
+    const token = createToken({ id: user._id });
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: maxAge * 1000,
+      secure: true,
+    });
+    res.cookie("user", `${user.name}-${user.role}`, {
+      maxAge: maxAge * 1000,
+      // secure: true,
+    });
+    res.status(200).json({ user: user._id, jwt: token });
+  } catch (err) {
+    const errors = handleErrors(err);
+    // bad request status code
+    console.log(req.body);
+    console.log(err);
+    res.status(400).json({ errors });
+  }
+}
+
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
+    console.log("test")
     const user = await User.login(email, password);
     const token = createToken({ id: user._id });
     res.cookie("jwt", token, {
