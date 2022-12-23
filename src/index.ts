@@ -20,7 +20,7 @@ import Course from "./routes/course.route";
 import { checkAdmin } from "./middleware/authMiddleware";
 
 const app: Express = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 
 const dbUri = process.env.DB_URL || "mongodb://127.0.0.1:27017/scm";
 
@@ -41,7 +41,7 @@ app.use("/api/v1/auth/", Auth);
 app.use("/api/v1/", Course);
 app.use("/api/v1/users/", requireAuth, isAdmin, UserList);
 app.use("/api/v1/dept/", isStudentOrFaculty, Dept);
-app.use("/api/v1/admin/", requireAuth, checkUser, isAdmin, AdminUser);
+app.use("/api/v1/admin/", AdminUser);
 
 app.get("/ping", isStudentOrFaculty, (_: Request, res: Response) => {
   res.json({ ping: "pong" });
