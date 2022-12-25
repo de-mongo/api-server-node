@@ -89,6 +89,7 @@ export const createCourse = async (req: Request, res: Response) => {
         res.status(201).json({status: "new course created", newCourse})
 
     } catch (err) {
+        console.log(err)
         res.status(400).json({error: "Unable to create new course"})
     }
 }
@@ -111,11 +112,11 @@ export const deleteCourse = async (req: Request, res: Response) => {
 }
 
 export const enrollCourse = async(req: Request, res:Response) => {
-    const {courseId} = req.body;
+    const {courseId, dept_id} = req.body;
 
     console.log("test")
     try {
-        const update = await User.findByIdAndUpdate(res.locals.user._id, { $push: {courses: courseId}})
+        const update = await User.findOneAndUpdate({_id: res.locals.user._id, dept_id: dept_id}, { $push: {courses: courseId}})
         res.send(update)
     } catch (err) {
         console.log(err)

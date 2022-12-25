@@ -45,6 +45,7 @@ const verifyUserRoleAccess = (
 };
 
 export const isAdmin = (req: any, res: any, next: any) => {
+  console.log(res.locals.user)
   verifyUserRoleAccess(req, res, next, ["admin"], {
     error: "Access Denied. User not Admin",
   });

@@ -13,7 +13,7 @@ router.post("/user/new", requireAuth, checkUser, isAdmin, createUser);
 router.get("/users/", requireAuth, checkUser, isAdmin, listall);
 router.get("/user/:id", requireAuth, checkUser, isAdmin, listOneUser);
 router.put("/user/:id", requireAuth, checkUser, isAdmin, updateUserByAdmin);
-router.delete("/user/:id", requireAuth, checkUser, isAdmin, deleteUser);
+router.post("/user/:id", checkUser, isAdmin, deleteUser);
 
 // router.post("/login/", login);
 // router.get("/logout/", logout);
