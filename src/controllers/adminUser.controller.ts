@@ -3,6 +3,7 @@ import User from "../models/User";
 
 export const updateUserByAdmin = async (req: Request, res: Response) => {
   const {
+    dept_id,
     role,
     password,
     first_name,
@@ -16,6 +17,7 @@ export const updateUserByAdmin = async (req: Request, res: Response) => {
     const value = await User.findByIdAndUpdate(
       {
         _id: req.params.id,
+        dept_id: dept_id,
       },
       {
         role: role,

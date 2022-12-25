@@ -38,9 +38,25 @@ export const myInfo = async (req: Request, res: Response) => {
 
 export const updateMyInfo = async (req: Request, res: Response) => {
 
+  const {
+    first_name,
+    last_name,
+    email,
+    street_address,
+    date_of_birth,
+    dept_id,
+  } = req.body;
+
+  console.log(req.body)
+
   try {
-    const userlist = await User.findByIdAndUpdate(res.locals.user._id, req.body )
-        .populate([{path: 'courses', populate: ['instrid', 'deptid']}, {path: 'dept_id'}]);
+    const userlist = await User.findOneAndUpdate({_id: res.locals.user._id, dept_id: dept_id}, {
+      first_name,
+      last_name,
+      email,
+      street_address,
+      date_of_birth,
+    })
 
     res.status(204).json(userlist);
   } catch (err) {
@@ -99,6 +115,8 @@ export const createUser = async (req: Request, res: Response) => {
   } = req.body;
 
   sem = sem ?? 1;
+
+  console.log(req.body)
 
   try {
     const user = await User.create({
@@ -161,10 +179,10 @@ export const updateUser = async (req: Request, res: Response) => {
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-  // const { _id } = req.body;
+  const { _id, dept_id } = req.body;
 
   try {
-    const val = await User.findByIdAndDelete(req.params.id);
+    const val = await User.findOneAndDelete({_id: req.params.id, dept_id: dept_id});
 
     res.status(201).json({ value: "deleted" });
   } catch (err) {
