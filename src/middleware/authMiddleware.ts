@@ -46,6 +46,7 @@ export const checkAdmin = (req: any, res: any, next: any) => {
 export const checkUser = (req: any, res: any, next: any) => {
   const token = req.cookies.jwt;
 
+  console.log("testasdf")
   if (token) {
     jwt.verify(token, process.env.JWTTOKEN || "mysecret", async (err: any, tokenDecoded: any) => {
       if (err) {
