@@ -2,6 +2,53 @@ import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import User from "../models/User";
 
+export const searchInstructor = async(req: Request, res: Response) => {
+
+  try {
+    let regexp = new RegExp(`${req.query.name}`, 'i')
+    console.log(regexp)
+    const userlist = await User.paginate(
+      {
+        role: req.query.role || "faculty", 
+        $or: [
+          {first_name: regexp}, {last_name: regexp}
+      ]}, 
+      { page: parseInt(String(req.query.page)) || 1}
+    );
+
+    res.status(200).json(userlist);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err });
+  }
+}
+
+export const myInfo = async (req: Request, res: Response) => {
+
+  try {
+    const userlist = await User.findById(res.locals.user._id)
+        .populate([{path: 'courses', populate: ['instrid', 'deptid']}, {path: 'dept_id'}]);
+
+    res.status(200).json(userlist);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err });
+  }
+}
+
+export const updateMyInfo = async (req: Request, res: Response) => {
+
+  try {
+    const userlist = await User.findByIdAndUpdate(res.locals.user._id, req.body )
+        .populate([{path: 'courses', populate: ['instrid', 'deptid']}, {path: 'dept_id'}]);
+
+    res.status(204).json(userlist);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ err });
+  }
+}
+
 export const listall = async (req: Request, res: Response) => {
   let query = {}
   req.query.role && (query = {role: req.query.role});
@@ -9,7 +56,10 @@ export const listall = async (req: Request, res: Response) => {
   try {
     const userlist = await User.paginate(
       query, 
-      { page: parseInt(String(req.query.page)) || 1, populate: {path: 'courses', populate: ['instrid', 'deptid']}}
+      { 
+        page: parseInt(String(req.query.page)) || 1, 
+        populate: [{path: 'courses', populate: ['instrid', 'deptid']}, {path: 'dept_id'}]
+      }
     );
 
     res.status(200).json(userlist);
@@ -23,7 +73,8 @@ export const listone = async (req: Request, res: Response) => {
   const { _id } = req.body;
 
   try {
-    const userDetail = await User.findById({ id: _id }).populate({path: 'courses', populate: ['instrid', 'deptid']});
+    const userDetail = await User.findById({ id: _id })
+    .populate([{path: 'courses', populate: ['instrid', 'deptid']}, {path: 'dept_id'}]);
 
     res.status(200).json({ user: userDetail });
   } catch (err) {
@@ -44,6 +95,7 @@ export const createUser = async (req: Request, res: Response) => {
     date_of_birth,
     degree,
     sem,
+    dept_id,
   } = req.body;
 
   sem = sem ?? 1;
@@ -60,6 +112,7 @@ export const createUser = async (req: Request, res: Response) => {
       date_of_birth,
       degree,
       sem,
+      dept_id,
     });
 
     // new resource created status code

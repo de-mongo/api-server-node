@@ -32,16 +32,21 @@ const { isAdmin } = require("./middleware/accessMiddleware");
 app.use(express.json());
 app.use(cookieParser());
 app.use(
-  cors({ origin: "http://localhost:3000", preflightContinue: true, credentials: true, methods })
+  cors({ origin: "http://localhost:3000", preflightContinue: false, credentials: true })
 );
+
+// app.use(
+//   cors({origin: false})
+// );
+
 app.use(morgan("common"));
 
-app.use("/api/v1/*", checkUser, checkAdmin);
+app.use("/api/v1/*", checkUser);
 app.use("/api/v1/auth/", Auth);
 app.use("/api/v1/", Course);
-app.use("/api/v1/users/", requireAuth, isAdmin, UserList);
-app.use("/api/v1/dept/", isStudentOrFaculty, Dept);
-app.use("/api/v1/admin/", AdminUser);
+app.use("/api/v1/users/", requireAuth, UserList);
+app.use("/api/v1/dept/", Dept);
+app.use("/api/v1/admin/", checkUser, AdminUser);
 
 app.get("/ping", isStudentOrFaculty, (_: Request, res: Response) => {
   res.json({ ping: "pong" });

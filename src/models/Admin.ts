@@ -14,7 +14,7 @@ interface IAdminUser {
 interface AdminUserModel extends PaginateModel<IAdminUser> {
   login(email: string, password: string): any;
 }
-const adminUserSchema = new Schema<IAdminUser, AdminUserModel>({
+const adminUserSchema = new Schema<IAdminUser>({
   first_name: {
     type: String,
     required: true,
