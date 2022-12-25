@@ -14,7 +14,7 @@ export const updateUserByAdmin = async (req: Request, res: Response) => {
   } = req.body;
 
   try {
-    const value = await User.findByIdAndUpdate(
+    const value = await User.findOneAndUpdate(
       {
         _id: req.params.id,
         dept_id: dept_id,

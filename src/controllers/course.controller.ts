@@ -118,6 +118,7 @@ export const enrollCourse = async(req: Request, res:Response) => {
         const update = await User.findByIdAndUpdate(res.locals.user._id, { $push: {courses: courseId}})
         res.send(update)
     } catch (err) {
+        console.log(err)
         res.status(400).json({error: "Unable to delete course"})
     }
 }
