@@ -39,7 +39,7 @@ export const updateUserByAdmin = async (req: Request, res: Response) => {
 export const listOneUser = async (req: Request, res: Response) => {
 
   try {
-    const userDetail = await User.findById(req.params.id).populate({path: 'courses', populate: ['instrid', 'deptid']});
+    const userDetail = await User.findById(req.params.id).populate([{path: 'courses', populate: ['instrid', 'deptid']}, {path: 'dept_id'}]);
 
     res.status(201).json(userDetail);
   } catch (err) {

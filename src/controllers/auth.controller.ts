@@ -60,7 +60,7 @@ export const signup = async (req: Request, res: Response) => {
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      secure: true,
+      // secure: true,
     });
 
     // new resource created status code
@@ -82,7 +82,7 @@ export const adminLogin = async (req: Request, res: Response) => {
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      secure: true,
+      // secure: true,
     });
     res.cookie("user", `${user.first_name}-${user.role}`, {
       maxAge: maxAge * 1000,
@@ -108,7 +108,7 @@ export const login = async (req: Request, res: Response) => {
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      secure: true,
+      // secure: true,
     });
     res.cookie("user", `${user.first_name}-${user.role}`, {
       maxAge: maxAge * 1000,
